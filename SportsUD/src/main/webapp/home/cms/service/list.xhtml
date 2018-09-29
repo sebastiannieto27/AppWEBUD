@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="serviceListForm">
+
+        <p:panel header="#{msg.service}">
+        
+       			<h:panelGroup id="searchForm">
+	            	<p:panelGrid columns="2" columnClasses="column" styleClass="panelGridCenter">
+	            		
+	           			<p:outputLabel for="rtvServiceName" value="#{msg.name}:" />
+						<p:inputText id="rtvServiceName" value="#{serviceController.searchName}" title="#{msg.name}:"/>
+	
+						<p:outputLabel value="#{msg.status}" for="rtvStatusId" />
+                        <p:selectOneMenu id="rtvStatusId" value="#{serviceController.searchStatusId}">
+                            <f:selectItem itemLabel="#{msg.SelectOneMessage}"/>
+                            <f:selectItems value="#{generalStatusController.items}"
+                                           var="generalStatusIdItem"
+                                           itemValue="#{generalStatusIdItem.generalStatusId}"
+                                           itemLabel="#{generalStatusIdItem.generalStatusName.toString()}"
+                                           />
+                        </p:selectOneMenu>
+                        
+          				<p:commandButton id="searchButton" icon="ui-icon-search" value="#{msg.search}" actionListener="#{serviceController.init()}" update=":serviceListForm" />
+           			</p:panelGrid>
+               </h:panelGroup>
+    
+   			<p:dataTable id="datalist"
+                         value="#{serviceController.items}"
+                         var="item"
+                         rowKey="#{item.serviceId}"
+                         paginator="true"
+                         rows="10"
+                         rowsPerPageTemplate="10,20,30,40,50"
+                         selectionMode="single"
+                         selection="#{serviceController.selected}">
+                
+                <p:ajax event="rowSelect"   update="@form:createButton,@form:viewButton,@form:editButton,@form:deleteButton" />
+                <p:ajax event="rowUnselect" update="@form:createButton,@form:viewButton,@form:editButton,@form:deleteButton" />
+                <p:ajax event="contextMenu" update="@form:createButton @form:viewButton @form:editButton @form:deleteButton"/>
+                <p:ajax event="rowDblselect" onsuccess="document.getElementById('serviceListForm:viewButton').click();"/>
+                
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{msg.name}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.serviceName}"/>
+                </p:column>
+
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{msg.generalStatus}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.generalStatusId.generalStatusName}"/>
+                </p:column>
+
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{msg.user}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.userId.completeName}"/>
+                </p:column>
+                
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{msg.creationDate}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.dateCre}">
+                        <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                    </h:outputText>
+                </p:column>
+                
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{msg.description}"/>
+                    </f:facet>
+                    <p:commandLink id="viewDescLink" value="#{msg.description}" update=":viewDescriptionForm" 
+                    		oncomplete="PF('viewDescriptionDialog').show()" actionListener="#{serviceController.showItemDescription(item)}"/>
+                </p:column>
+
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{msg.images}"/>
+                    </f:facet>
+                    <p:commandLink id="viewImgLink" value="#{msg.images}" update=":viewImagesForm" 
+                    		oncomplete="PF('viewImagesDialog').show()" actionListener="#{serviceController.showImagesModal(item)}"/>
+                </p:column>
+
+            </p:dataTable>
+
+            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{msg.create}" actionListener="#{serviceController.prepareCreate}" update=":serviceCreateForm" oncomplete="PF('serviceCreateDialog').show()"/>
+            <p:commandButton id="viewButton" icon="ui-icon-search" value="#{msg.view}" update=":serviceViewForm" oncomplete="PF('serviceViewDialog').show()" disabled="#{empty serviceController.selected}"/>
+            <p:commandButton id="editButton"  icon="ui-icon-pencil" value="#{msg.edit}" actionListener="#{serviceController.prepareEdit}" update=":serviceEditForm" oncomplete="PF('serviceEditDialog').show()" disabled="#{empty serviceController.selected}"/>
+            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{msg.delete}" actionListener="#{serviceController.delete}" update=":growl,datalist" disabled="#{empty serviceController.selected}">
+                <p:confirm header="#{msg.confirmation_header}" message="#{msg.confirm_delete_message}" icon="ui-icon-alert"/>
+            </p:commandButton>
+
+        </p:panel>
+        <ui:include src="/WEB-INF/templates/confirmation.xhtml"/>
+    </h:form>
+
+</ui:composition>

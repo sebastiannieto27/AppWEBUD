@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="newsViewDlg" widgetVar="newsViewDialog" modal="true" resizable="false"  appendTo="@(body)" header="#{msg.news}" closeOnEscape="true">
+
+            <h:form id="newsViewForm">
+
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" columnClasses="column" rendered="#{newsController.selected != null}">
+
+                        <h:outputText value="#{msg.id}"/>
+                        <h:outputText value="#{newsController.selected.newId}" title="#{msg.id}"/>
+
+                        <h:outputText value="#{msg.news}"/>
+                        <h:outputText value="#{newsController.selected.newsTitle}" title="#{msg.news}"/>
+
+                        <h:outputText value="#{msg.status}"/>
+                        <h:outputText value="#{newsController.selected.generalStatusId.generalStatusName}" title="#{msg.status}"/>
+
+                        <h:outputText value="#{msg.startDate}"/>
+                        <h:outputText value="#{newsController.selected.newsDateStart}" title="#{msg.startDate}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+
+                        <h:outputText value="#{msg.endDate}"/>
+                        <h:outputText value="#{newsController.selected.newsDateExpire}" title="#{msg.endDate}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+
+                        <h:outputText value="#{msg.shortDescription}"/>
+                        <h:outputText value="#{newsController.selected.newsShortDescr}" title="#{msg.shortDescription}"/>
+
+                        <h:outputText value="#{msg.creationDate}"/>
+                        <h:outputText value="#{newsController.selected.dateCre}" title="#{msg.creationDate}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+
+                        <h:outputText value="#{msg.user}"/>
+                        <h:outputText value="#{newsController.selected.userId.firstName}"/>
+
+                        <h:outputText value="#{msg.newsType}"/>
+                        <h:outputText value="#{newsController.selected.newsTypeId.newsTypeName}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{msg.close}" onclick="PF('newsViewDialog').hide()"/>
+                </h:panelGroup>
+
+            </h:form>
+
+        </p:dialog>
+
+    </ui:composition>
+
+</html>

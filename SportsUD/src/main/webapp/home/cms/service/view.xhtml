@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="serviceViewDlg" widgetVar="serviceViewDialog" modal="true" resizable="false"  appendTo="@(body)" header="#{msg.service}" closeOnEscape="true">
+
+            <h:form id="serviceViewForm">
+
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" columnClasses="column" rendered="#{serviceController.selected != null}">
+
+                        <h:outputText value="#{msg.id}"/>
+                        <h:outputText value="#{serviceController.selected.serviceId}" title="#{msg.id}"/>
+
+                        <h:outputText value="#{msg.name}"/>
+                        <h:outputText value="#{serviceController.selected.serviceName}" title="#{msg.name}"/>
+
+                        <h:outputText value="#{msg.description}"/>
+                        <h:outputText value="#{serviceController.selected.serviceDesc}" title="#{msg.description}"/>
+
+                        <h:outputText value="#{msg.generalStatus}"/>
+                        <h:outputText value="#{serviceController.selected.generalStatusId.generalStatusName.toString()}" title="#{msg.generalStatus}"/>
+
+                        <h:outputText value="#{msg.creationDate}"/>
+                        <h:outputText value="#{serviceController.selected.dateCre}" title="#{msg.creationDate}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+
+                        <h:outputText value="#{msg.user}"/>
+                        <h:outputText value="#{serviceController.selected.userId.firstName}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{msg.close}" onclick="PF('serviceViewDialog').hide()"/>
+                </h:panelGroup>
+
+            </h:form>
+
+        </p:dialog>
+
+   </ui:composition>
+
+</html>

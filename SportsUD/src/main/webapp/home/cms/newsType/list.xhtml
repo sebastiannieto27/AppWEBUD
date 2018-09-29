@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <body>
+	    <ui:composition>
+
+    <h:form id="newsTypeListForm">
+
+        <p:panel header="#{msg.newsType}">
+        
+        	<h:panelGroup id="searchForm">
+	            	<p:panelGrid columns="2" columnClasses="column" styleClass="panelGridCenter">
+	            		
+	           			<p:outputLabel for="rtvName" value="#{msg.name}:" />
+						<p:inputText id="rtvName" value="#{newsTypeController.searchName}" title="#{msg.Name}:"/>
+	
+          				<p:commandButton id="searchButton" icon="ui-icon-search" value="#{msg.search}" actionListener="#{newsTypeController.init()}" update=":newsTypeListForm" />
+           			</p:panelGrid>
+               </h:panelGroup>
+               
+            	<p:dataTable id="datalist"
+                         value="#{newsTypeController.items}"
+                         var="item"
+                         rowKey="#{item.newsTypeId}"
+                         paginator="true"
+                         rows="10"
+                         rowsPerPageTemplate="10,20,30,40,50"
+                         selectionMode="single"
+                         selection="#{newsTypeController.selected}">
+
+                <p:ajax event="rowSelect"   update="@form:createButton,@form:viewButton,@form:editButton,@form:deleteButton"/>
+                <p:ajax event="rowUnselect" update="@form:createButton,@form:viewButton,@form:editButton,@form:deleteButton"/>
+                <p:ajax event="contextMenu" update="@form:createButton @form:viewButton @form:editButton @form:deleteButton"/>
+                <p:ajax event="rowDblselect" onsuccess="document.getElementById('newsTypeListForm:viewButton').click();"/>
+
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{msg.id}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.newsTypeId}"/>
+                </p:column>
+
+
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="#{msg.name}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.newsTypeName}"/>
+                </p:column>
+
+            </p:dataTable>
+
+            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{msg.create}" actionListener="#{newsTypeController.prepareCreate}" update=":newsTypeCreateForm" oncomplete="PF('newsTypeCreateDialog').show()"/>
+            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{msg.view}" update=":newsTypeViewForm" oncomplete="PF('newsTypeViewDialog').show()" disabled="#{empty newsTypeController.selected}"/>
+            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{msg.edit}" update=":newsTypeEditForm" oncomplete="PF('newsTypeEditDialog').show()" disabled="#{empty newsTypeController.selected}"/>
+            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{msg.delete}" actionListener="#{newsTypeController.delete}" update=":growl,datalist" disabled="#{empty newsTypeController.selected}">
+                <p:confirm header="#{msg.confirmation_header}" message="#{msg.confirm_delete_message}" icon="ui-icon-alert"/>
+            </p:commandButton>
+
+        </p:panel>
+        <ui:include src="/WEB-INF/templates/confirmation.xhtml"/>
+    </h:form>
+     </ui:composition>
+    </body>
+</html>
